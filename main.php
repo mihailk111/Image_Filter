@@ -10,4 +10,4 @@ require_once "./blackWhiteImage.php";
 //    }
 // }
 
-blackWhiteImage("./img/mona_liza.jpg", 2, 2);
+blackWhiteImage("./img/IMG_20200816_132349.jpg", 4, 2);

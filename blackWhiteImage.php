@@ -3,31 +3,28 @@
 require_once "rgbAt.php";
 require_once "./countAverage.php";
 require_once "./createBlurredFile.php";
+require_once "./imageGreyAverage.php";
 
 define('AVERAGE_GRAY_RGB_ELEM', 127.5);
-
-const areaFindingBlurScale = 10;
-const finalBlur = 2;
 
 
 function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurScale,  string $outFile = null)
 {
     $pathInfo = pathinfo($filePath);
-
     $typeOfFile = $pathInfo['extension'];
     $fileName = $pathInfo['filename'];
 
     if (!$outFile) $outFile = "{$fileName}_blacked-" . $blurScale . "-" . $areaFindingBlurScale . ".{$typeOfFile}";
-    // if (!$outFile) $outFile = "{$fileName}_blacked-$blurScale.{$typeOfFile}";
 
-    $hardBlurredFileName = time() . "{$fileName}_blurred.{$typeOfFile}";
 
-    // exec("convert $filePath -blur 0x".$areaFindingBlurScale." $hardBlurredFileName");
-    createBlurredFile($filePath, $areaFindingBlurScale, $hardBlurredFileName);
+    $hardBlurredFileName = createBlurredFile($filePath, $areaFindingBlurScale, time() . "{$fileName}_blurred.{$typeOfFile}");
 
-    $blurredImageResource = imagecreatefromstring(file_get_contents($hardBlurredFileName));
+    $hardBlurredImageResource = imagecreatefromstring(file_get_contents($hardBlurredFileName));
 
-    $imageResource = blackWhiteImageResource($blurredImageResource, $filePath, $blurScale);
+    // r(imaola$blurredImageResource
+    // ;
+
+    $imageResource = blackWhiteImageResource($hardBlurredImageResource, $filePath, $blurScale);
 
     $imageType = image_type_to_extension(exif_imagetype($filePath), false);
 
@@ -55,19 +52,10 @@ function blackWhiteImageResource(GdImage $someImage, $normalFileName, $blurScale
     $width =  imagesx($someImage);
     $height = imagesy($someImage);
 
-    $allGraysSum = 0;
-    for ($x = 0; $x < $width; $x++) {
-        for ($y = 0; $y < $height; $y++) {
-            $pixelRgb = rgbAt($someImage, $x, $y);
-            $newRgb = intval(($pixelRgb['red'] + $pixelRgb['green'] + $pixelRgb['blue']) / 3);
-            $allGraysSum += $newRgb;
-        }
-    }
-
     /**
      *  Image grey average
      */
-    $average = $allGraysSum / ($width * $height);
+    $greyAverage = imageGreyAverage($someImage);
 
     /**
      *  Contains pixels in form $pixel[0] is x $pixel[1] is y
@@ -77,31 +65,16 @@ function blackWhiteImageResource(GdImage $someImage, $normalFileName, $blurScale
     for ($x = 0; $x < $width; $x++) {
         for ($y = 0; $y < $height; $y++) {
 
-            $pixelRgb = rgbAt($someImage, $x, $y);
 
-            $newGreyRgbElement = intval(($pixelRgb['red'] + $pixelRgb['green'] + $pixelRgb['blue']) / 3);
+            $newGreyRgbElement = greyAt($someImage, $x, $y);
 
-            $newColor = $newGreyRgbElement > $average ? 'white' : 'black';
+            $newColor = $newGreyRgbElement > $greyAverage ? 'white' : 'black';
             if ($newColor === 'white') {
                 $area['light'][] = [$x, $y];
             } else {
                 $area['dark'][] = [$x, $y];
             }
 
-            // $newColor = 0;
-            // if($newGreyRgbElement <= $scaleOf255[0])
-            // {
-            //     $newColor = $black;
-            // }
-            // else if ($newGreyRgbElement > $scaleOf255[1] )
-            // {
-            //     $newColor = $white;
-            // }
-            // else
-            // {
-            //     $newColor = $medium_color;
-            // }
-            // imagesetpixel($someImage, $x, $y, $newColor);
         }
     }
 
@@ -116,9 +89,9 @@ function blackWhiteImageResource(GdImage $someImage, $normalFileName, $blurScale
     $normalFileNameBlurred = createBlurredFile($normalFileName, $blurScale);
     $normalImage = imagecreatefromstring(file_get_contents($normalFileNameBlurred));
 
-    // $black = imagecolorallocate($someImage, 0, 0, 0);
-    // $black = imagecolorallocate($someImage, 74, 0, 109);
-    // $white = imagecolorallocate($someImage, 255, 255, 255);
+
+    `rm $normalFileNameBlurred`;
+
 
     $blackColor = imagecolorallocate($normalImage, 0, 0, 0);
     $greyColor = imagecolorallocate($normalImage, 85, 85, 85);
@@ -142,8 +115,7 @@ function blackWhiteImageResource(GdImage $someImage, $normalFileName, $blurScale
         $newColor = ($grey > $lightAverage) ? $whiteColor : $lightGreyColor; //$blackColor;
         imagesetpixel($normalImage, $x, $y, $newColor);
 
-        unset($lightPixels[$key]);
-
+        // unset($lightPixels[$key]);
     }
 
     foreach ($darkPixels as $key => &$pixel) {
@@ -153,9 +125,9 @@ function blackWhiteImageResource(GdImage $someImage, $normalFileName, $blurScale
         $newColor = ($grey > $darkAverage) ? $greyColor : $blackColor;
         imagesetpixel($normalImage, $x, $y, $newColor);
 
-        unset($darkPixels[$key]);
+        // unset($darkPixels[$key]);
     }
-    
+
 
 
     return $normalImage;

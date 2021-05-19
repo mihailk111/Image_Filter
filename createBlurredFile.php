@@ -8,10 +8,7 @@ function createBlurredFile(string $fileName, int $blurScale, string $outFile = n
 {
 
     $pathInfo = pathinfo($fileName);
-
     $blurredFileName = isset($outFile) ? $outFile : $pathInfo['filename'] . "_blurred." . $pathInfo['extension'];
-
     `convert $fileName -blur 0x$blurScale $blurredFileName`;
-
     return $blurredFileName;
 }
