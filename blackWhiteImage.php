@@ -107,3 +107,4 @@ function blackWhiteImageResource(GdImage $someImage, $normalFileName, $blurScale
 
     return $normalImage;
 }
+
