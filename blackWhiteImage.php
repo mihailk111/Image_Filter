@@ -8,8 +8,15 @@ require_once "./findDarkAndLightAreas.php";
 
 define('AVERAGE_GRAY_RGB_ELEM', 127.5);
 
+class Type 
+{
+    static $fourColor = 1;
+    static $twoColor = 2;
+    static $twoColorExtended = 3;
+}
 
-function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurScale,  string $outFile = null)
+
+function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurScale, int  $type = 1,  string $outFile = null)
 {
     $pathInfo = pathinfo($filePath);
     $typeOfFile = $pathInfo['extension'];
@@ -22,10 +29,10 @@ function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurS
 
     $hardBlurredImageResource = imagecreatefromstring(file_get_contents($hardBlurredFileName));
 
-    // r(imaola$blurredImageResource
-    // ;
+    $areas = findDarkAndLightAreas($hardBlurredImageResource);
+    imagedestroy($hardBlurredImageResource);
 
-    $imageResource = blackWhiteImageResource($hardBlurredImageResource, $filePath, $blurScale);
+    $imageResource = fourColorsFilter($filePath, $blurScale, $areas);
 
     $imageType = image_type_to_extension(exif_imagetype($filePath), false);
 
@@ -47,37 +54,28 @@ function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurS
 
 
 
-function blackWhiteImageResource(GdImage $someImage, $normalFileName, $blurScale): GdImage
+function fourColorsFilter($fileName, $blurScale, $areas): GdImage
 {
-
-
-    $area = findDarkAndLightAreas($someImage);
-
-    /**
-     *  Destroy hard blured image
-     */
-    imagedestroy($someImage);
-
     /**
      *  main file
      */
-    $normalFileNameBlurred = createBlurredFile($normalFileName, $blurScale);
-    $normalImage = imagecreatefromstring(file_get_contents($normalFileNameBlurred));
+    $blurredFileName = createBlurredFile($fileName, $blurScale);
+    $image = imagecreatefromstring(file_get_contents($blurredFileName));
 
 
-    `rm $normalFileNameBlurred`;
+    `rm $blurredFileName`;
 
 
-    $blackColor = imagecolorallocate($normalImage, 0, 0, 0);
-    $greyColor = imagecolorallocate($normalImage, 85, 85, 85);
-    $lightGreyColor = imagecolorallocate($normalImage, 170, 170, 170);
-    $whiteColor = imagecolorallocate($normalImage, 255, 255, 255);
+    $blackColor = imagecolorallocate($image, 0, 0, 0);
+    $greyColor = imagecolorallocate($image, 85, 85, 85);
+    $lightGreyColor = imagecolorallocate($image, 170, 170, 170);
+    $whiteColor = imagecolorallocate($image, 255, 255, 255);
 
-    $width =  imagesx($normalImage);
-    $height = imagesy($normalImage);
+    $width =  imagesx($image);
+    $height = imagesy($image);
 
-    $lightAverage = countAverage('light', $area, $normalImage);
-    $darkAverage = countAverage('dark', $area, $normalImage);
+    $lightAverage = countAverage('light', $area, $image);
+    $darkAverage = countAverage('dark', $area, $image);
 
     $lightPixels = &$area['light'];
     $darkPixels = &$area['dark'];
@@ -86,9 +84,9 @@ function blackWhiteImageResource(GdImage $someImage, $normalFileName, $blurScale
 
         $x = $pixel[0];
         $y = $pixel[1];
-        $grey = greyAt($normalImage, $x, $y);
+        $grey = greyAt($image, $x, $y);
         $newColor = ($grey > $lightAverage) ? $whiteColor : $lightGreyColor; //$blackColor;
-        imagesetpixel($normalImage, $x, $y, $newColor);
+        imagesetpixel($image, $x, $y, $newColor);
 
         // unset($lightPixels[$key]);
     }
@@ -96,15 +94,15 @@ function blackWhiteImageResource(GdImage $someImage, $normalFileName, $blurScale
     foreach ($darkPixels as $key => &$pixel) {
         $x = $pixel[0];
         $y = $pixel[1];
-        $grey = greyAt($normalImage, $x, $y);
+        $grey = greyAt($image, $x, $y);
         $newColor = ($grey > $darkAverage) ? $greyColor : $blackColor;
-        imagesetpixel($normalImage, $x, $y, $newColor);
+        imagesetpixel($image, $x, $y, $newColor);
 
         // unset($darkPixels[$key]);
     }
 
 
 
-    return $normalImage;
+    return $image;
 }
 
