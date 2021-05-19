@@ -4,6 +4,7 @@ require_once "rgbAt.php";
 require_once "./countAverage.php";
 require_once "./createBlurredFile.php";
 require_once "./imageGreyAverage.php";
+require_once "./findDarkAndLightAreas.php";
 
 define('AVERAGE_GRAY_RGB_ELEM', 127.5);
 
@@ -49,34 +50,8 @@ function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurS
 function blackWhiteImageResource(GdImage $someImage, $normalFileName, $blurScale): GdImage
 {
 
-    $width =  imagesx($someImage);
-    $height = imagesy($someImage);
 
-    /**
-     *  Image grey average
-     */
-    $greyAverage = imageGreyAverage($someImage);
-
-    /**
-     *  Contains pixels in form $pixel[0] is x $pixel[1] is y
-     */
-    $area = ['dark' => [], 'light' => []];
-
-    for ($x = 0; $x < $width; $x++) {
-        for ($y = 0; $y < $height; $y++) {
-
-
-            $newGreyRgbElement = greyAt($someImage, $x, $y);
-
-            $newColor = $newGreyRgbElement > $greyAverage ? 'white' : 'black';
-            if ($newColor === 'white') {
-                $area['light'][] = [$x, $y];
-            } else {
-                $area['dark'][] = [$x, $y];
-            }
-
-        }
-    }
+    $area = findDarkAndLightAreas($someImage);
 
     /**
      *  Destroy hard blured image
