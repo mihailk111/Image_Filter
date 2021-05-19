@@ -10,4 +10,4 @@ require_once "./blackWhiteImage.php";
 //    }
 // }
 
-blackWhiteImage("./img/IMG_20200816_132349.jpg", 4, 2);
+blackWhiteImage("./img/out320.jpg", 2, 2);

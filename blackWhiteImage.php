@@ -74,11 +74,11 @@ function fourColorsFilter($fileName, $blurScale, $areas): GdImage
     $width =  imagesx($image);
     $height = imagesy($image);
 
-    $lightAverage = countAverage('light', $area, $image);
-    $darkAverage = countAverage('dark', $area, $image);
+    $lightAverage = countAverage('light', $areas, $image);
+    $darkAverage = countAverage('dark', $areas, $image);
 
-    $lightPixels = &$area['light'];
-    $darkPixels = &$area['dark'];
+    $lightPixels = &$areas['light'];
+    $darkPixels = &$areas['dark'];
 
     foreach ($lightPixels as $key => &$pixel) {
 
