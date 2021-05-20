@@ -16,7 +16,7 @@ $i = 2;
 $j = 0;
 
 
-$lastImageProcessed = file_get_contents("./lastImageProcessed.txt");
+// $lastImageProcessed = file_get_contents("./lastImageProcessed.txt");
 
 $dir = scandir("./images");
 $dir = array_filter($dir, function ($elem){
@@ -30,7 +30,7 @@ $dir = array_filter($dir, function ($elem){
 // preg_match("/\d+/","out124.jpg", $match)
 
 foreach ($dir as $file) {
-    blackWhiteImage($file, $i, $j, "twoColor", outFile:"./img_out", palette: $twitchColorPalette);
+    blackWhiteImage("./images/".$file, $i, $j, "twoColor", outDir:"./img_out/", palette: $twitchColorPalette);
 }
 
 // rgb(174, 31, 207);
