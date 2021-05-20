@@ -1,19 +1,36 @@
 <?php
 
 require_once "./blackWhiteImage.php";
+require_once "./colorPalette.php";
 
-// for ($i=0; $i < 5 ; $i++) { 
-//    for ($j=0; $j < 5; $j++) 
-//    {
+$black = new Color(0,0,0);
+$grey = new Color(85,85,85);
+$lightGrey = new Color(170, 170, 170);
+$white = new Color(255,255,255);
 
-//         blackWhiteImage("./img/out320.jpg", $i, $j);
-//    }
-// }
+$darkPurple = new Color(95, 9, 115);
+$twitchColorPalette = new twoColorsPalette($darkPurple, $white);
+
 
 $i = 2;
-$j = 2;
-// blackWhiteImage("./")
-// blackWhiteImage("./Убермаргинал-Анатолий-Миценгендлер-биография-стримера-6-1024x576.jpg", $i, $j);
-blackWhiteImage("./img/IMG_20200816_132349.jpg", $i, $j, "fourColor");
-// blackWhiteImage("./265dd5def54d6264909433ddca557b5d.jpg", $i, $j);
-// blackWhiteImage("./03e17f5efcb6937e65d70f77bdfa2478.jpg", $i, $j);
+$j = 0;
+
+
+$lastImageProcessed = file_get_contents("./lastImageProcessed.txt");
+
+$dir = scandir("./images");
+$dir = array_filter($dir, function ($elem){
+    return str_ends_with($elem, ".jpg"); 
+});
+
+// $dir = array_filter($dir, function($elem){
+//     preg_match("/\d+/", $elem, $match);
+//     $numberInElem = $match[0]; 
+// });
+// preg_match("/\d+/","out124.jpg", $match)
+
+foreach ($dir as $file) {
+    blackWhiteImage($file, $i, $j, "twoColor", outFile:"./img_out", palette: $twitchColorPalette);
+}
+
+// rgb(174, 31, 207);

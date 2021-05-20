@@ -1,6 +1,6 @@
 <?php
 
-function fourColorsFilter($fileName, $blurScale, $areas, array $palette ): GdImage
+function fourColorsFilter($fileName, $blurScale, $areas, fourColorsPalette $palette): GdImage
 {
     /**
      *  main file
@@ -11,15 +11,15 @@ function fourColorsFilter($fileName, $blurScale, $areas, array $palette ): GdIma
 
     `rm $blurredFileName`;
 
-    $black =  $palette[3];
-    $grey = $palette[2];
-    $lightGrey = $palette[1];
-    $white = $palette[0];
+    $black =  $palette->black;
+    $grey = $palette->grey;
+    $lightGrey = $palette->lightGrey;
+    $white = $palette->white;
 
-    $blackColor = imagecolorallocate($image, $black[0], $black[1], $black[2]);
-    $greyColor = imagecolorallocate($image, $grey[0], $grey[1], $grey[2]);
-    $lightGreyColor = imagecolorallocate($image, $lightGrey[0], $lightGrey[1], $lightGrey[2]);
-    $whiteColor = imagecolorallocate($image, $image, $black[0], $black[1], $black[2]);
+    $blackColor = imagecolorallocate($image, $black->red, $black->green, $black->blue);
+    $greyColor = imagecolorallocate($image, $grey->red, $grey->green, $grey->blue);
+    $lightGreyColor = imagecolorallocate($image, $lightGrey->red, $lightGrey->green, $lightGrey->blue);
+    $whiteColor = imagecolorallocate($image, $image, $black->red, $black->green, $black->blue);
 
     $width =  imagesx($image);
     $height = imagesy($image);
@@ -35,9 +35,8 @@ function fourColorsFilter($fileName, $blurScale, $areas, array $palette ): GdIma
         $x = $pixel[0];
         $y = $pixel[1];
         $grey = greyAt($image, $x, $y);
-        $newColor = ($grey > $lightAverage) ? $whiteColor : $lightGreyColor;//$lightGreyColor; //$blackColor;
+        $newColor = ($grey > $lightAverage) ? $whiteColor : $lightGreyColor; //$lightGreyColor; //$blackColor;
         imagesetpixel($image, $x, $y, $newColor);
-
     }
 
     foreach ($darkPixels as $key => &$pixel) {
@@ -46,7 +45,6 @@ function fourColorsFilter($fileName, $blurScale, $areas, array $palette ): GdIma
         $grey = greyAt($image, $x, $y);
         $newColor = ($grey > $darkAverage) ? $greyColor : $blackColor;
         imagesetpixel($image, $x, $y, $newColor);
-
     }
 
 
