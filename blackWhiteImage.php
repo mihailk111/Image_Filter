@@ -7,7 +7,7 @@ require_once "./imageGreyAverage.php";
 require_once "./findDarkAndLightAreas.php";
 require_once "./twoColorsFilter.php";
 require_once "./fourColorsFilter.php";
-
+require_once "./saveImage.php";
 
 
 function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurScale, string  $type = "fourColor",  string $outFile = null)
@@ -32,6 +32,7 @@ function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurS
 
         $imageResource = fourColorsFilter($filePath, $blurScale, $areas);
 
+        saveImage($imageResource, $filePath, $outFile);
     } 
     else if ($type === "twoColor") {
 
@@ -39,21 +40,9 @@ function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurS
         $imageResource = imagecreatefromstring(file_get_contents($blurredFileName));
         twoColorsFilter($imageResource);
 
+        saveImage($imageResource, $filePath, $outFile);
+
     }
-
-
-    $imageType = image_type_to_extension(exif_imagetype($filePath), false);
-
-    match ($imageType) {
-        'jpeg' => imagejpeg($imageResource, $outFile,  100),
-        'png' => imagepng($imageResource, $outFile, 0),
-        'webp' => imagewebp($imageResource, $outFile, 100),
-        default => throw new Exception("We support only JPEG WEBP and PNG")
-    };
-
-    echo "saved at $outFile\n";
-
-    imagedestroy($imageResource);
 
     `rm $hardBlurredFileName`;
 }

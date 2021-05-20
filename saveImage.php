@@ -1,14 +1,16 @@
 <?php
-//TODO
-// function saveImage(GdImage $file)
-// {
-//     $imageType = image_type_to_extension(exif_read_data($file), false);
 
-//     match ($imageType) {
-//         'jpeg' => imagejpeg($imageResource, $outFile,  100),
-//         'png' => imagepng($imageResource, $outFile, 0),
-//         'webp' => imagewebp($imageResource, $outFile, 100),
-//         default => throw new Exception("We support only JPEG WEBP and PNG")
-//     };
+function saveImage(GdImage $image, string $fileName, string $outFile)
+{
+    $imageType = image_type_to_extension(exif_imagetype($fileName), false);
 
-// }
+    match ($imageType) {
+        'jpeg' => imagejpeg($image, $outFile,  100),
+        'png' => imagepng($image, $outFile, 0),
+        'webp' => imagewebp($image, $outFile, 100),
+        default => throw new Exception("We support only JPEG WEBP and PNG")
+    };
+
+    imagedestroy($image);
+
+}
