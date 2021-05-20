@@ -10,7 +10,7 @@ require_once "./fourColorsFilter.php";
 require_once "./saveImage.php";
 
 
-function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurScale, string  $type = "fourColor",  string $outFile = null)
+function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurScale, string  $type = "fourColor",  string $outFile = null, array $palette = [])
 {
     $pathInfo = pathinfo($filePath);
     $typeOfFile = $pathInfo['extension'];
@@ -30,7 +30,7 @@ function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurS
 
         imagedestroy($hardBlurredImageResource);
 
-        $imageResource = fourColorsFilter($filePath, $blurScale, $areas);
+        $imageResource = fourColorsFilter($filePath, $blurScale, $areas, $palette);
 
         saveImage($imageResource, $filePath, $outFile);
 

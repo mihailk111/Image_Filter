@@ -1,9 +1,7 @@
 NEW IDEA
 
-1. work again only in black areas !!!!
 
-2. where did i load image second time ? did i ?
 
 3. try to speed some shit with imagecolorstotal()
 
-4. coping can speed up process imagecopy() || call to imagecreatefrom string agaain
+4. coping can speed up process imagecopy() || call to imagecreatefrom string again
