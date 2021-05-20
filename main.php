@@ -10,8 +10,8 @@ require_once "./blackWhiteImage.php";
 //    }
 // }
 
-$i = 0;
-$j = 0;
+$i = 2;
+$j = 2;
 // blackWhiteImage("./")
 // blackWhiteImage("./Убермаргинал-Анатолий-Миценгендлер-биография-стримера-6-1024x576.jpg", $i, $j);
 blackWhiteImage("./Убермаргинал-Анатолий-Миценгендлер-биография-стримера-3.jpg", $i, $j, "twoColor");

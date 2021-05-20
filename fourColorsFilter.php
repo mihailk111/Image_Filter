@@ -34,7 +34,6 @@ function fourColorsFilter($fileName, $blurScale, $areas): GdImage
         $newColor = ($grey > $lightAverage) ? $whiteColor : $lightGreyColor; //$blackColor;
         imagesetpixel($image, $x, $y, $newColor);
 
-        // unset($lightPixels[$key]);
     }
 
     foreach ($darkPixels as $key => &$pixel) {
@@ -44,7 +43,6 @@ function fourColorsFilter($fileName, $blurScale, $areas): GdImage
         $newColor = ($grey > $darkAverage) ? $greyColor : $blackColor;
         imagesetpixel($image, $x, $y, $newColor);
 
-        // unset($darkPixels[$key]);
     }
 
 

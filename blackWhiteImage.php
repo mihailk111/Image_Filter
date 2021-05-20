@@ -33,6 +33,8 @@ function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurS
         $imageResource = fourColorsFilter($filePath, $blurScale, $areas);
 
         saveImage($imageResource, $filePath, $outFile);
+
+        `rm $hardBlurredFileName`;
     } 
     else if ($type === "twoColor") {
 
@@ -44,7 +46,6 @@ function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurS
 
     }
 
-    `rm $hardBlurredFileName`;
 }
 
 
