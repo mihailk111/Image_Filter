@@ -1,6 +1,6 @@
 <?php
 
-function fourColorsFilter($fileName, $blurScale, $areas): GdImage
+function fourColorsFilter($fileName, $blurScale, $areas, array $palette ): GdImage
 {
     /**
      *  main file
@@ -11,11 +11,15 @@ function fourColorsFilter($fileName, $blurScale, $areas): GdImage
 
     `rm $blurredFileName`;
 
+    $black =  $palette[3];
+    $grey = $palette[2];
+    $lightGrey = $palette[1];
+    $white = $palette[0];
 
-    $blackColor = imagecolorallocate($image, 0, 0, 0);
-    $greyColor = imagecolorallocate($image, 85, 85, 85);
-    $lightGreyColor = imagecolorallocate($image, 170, 170, 170);
-    $whiteColor = imagecolorallocate($image, 255, 255, 255);
+    $blackColor = imagecolorallocate($image, $black[0], $black[1], $black[2]);
+    $greyColor = imagecolorallocate($image, $grey[0], $grey[1], $grey[2]);
+    $lightGreyColor = imagecolorallocate($image, $lightGrey[0], $lightGrey[1], $lightGrey[2]);
+    $whiteColor = imagecolorallocate($image, $image, $black[0], $black[1], $black[2]);
 
     $width =  imagesx($image);
     $height = imagesy($image);
@@ -31,7 +35,7 @@ function fourColorsFilter($fileName, $blurScale, $areas): GdImage
         $x = $pixel[0];
         $y = $pixel[1];
         $grey = greyAt($image, $x, $y);
-        $newColor = ($grey > $lightAverage) ? $whiteColor : $lightGreyColor; //$blackColor;
+        $newColor = ($grey > $lightAverage) ? $whiteColor : $lightGreyColor;//$lightGreyColor; //$blackColor;
         imagesetpixel($image, $x, $y, $newColor);
 
     }
