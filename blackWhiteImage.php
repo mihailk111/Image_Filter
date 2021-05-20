@@ -10,7 +10,7 @@ require_once "./fourColorsFilter.php";
 require_once "./saveImage.php";
 
 
-function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurScale, string  $type = "fourColor",  string $outFile = null, array $palette = [])
+function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurScale, string  $type = "fourColor",  string $outFile = ".", colorPalette $palette)
 {
     $pathInfo = pathinfo($filePath);
     $typeOfFile = $pathInfo['extension'];
@@ -40,10 +40,11 @@ function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurS
 
         $blurredFileName = createBlurredFile($filePath, $blurScale, time() . "{$fileName}_blurred.{$typeOfFile}");
         $imageResource = imagecreatefromstring(file_get_contents($blurredFileName));
-        twoColorsFilter($imageResource);
+        twoColorsFilter($imageResource, $palette);
 
         saveImage($imageResource, $filePath, $outFile);
 
+        `rm $blurredFileName`;
     }
 
 }

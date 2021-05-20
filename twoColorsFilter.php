@@ -1,10 +1,11 @@
 <?php
 
-function twoColorsFilter(GdImage $image)
+function twoColorsFilter(GdImage $image, twoColorsPalette $palette)
 {
     $greyAverage = imageGreyAverage($image);
-    $black = imagecolorallocate($image, 0, 0, 0);
-    $white = imagecolorallocate($image, 255, 255, 255);
+
+    $black = imagecolorallocate($image, $palette->black->red, $palette->black->green, $palette->black->blue);
+    $white = imagecolorallocate($image, $palette->white->red, $palette->white->green, $palette->white->blue);
 
     $width =  imagesx($image);
     $height = imagesy($image);
