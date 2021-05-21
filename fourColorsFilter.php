@@ -46,8 +46,5 @@ function fourColorsFilter($fileName, $blurScale, $areas, fourColorsPalette $pale
         $newColor = ($grey > $darkAverage) ? $greyColor : $blackColor;
         imagesetpixel($image, $x, $y, $newColor);
     }
-
-
-
     return $image;
 }

@@ -4,7 +4,7 @@
  * 
  * @return $blurredFileName 
  */
-function createBlurredFile(string $fileName, int $blurScale, string $outFile = null):string
+function createBlurredFile(string $fileName, int $blurScale, string $outFile = null): string
 {
 
     $pathInfo = pathinfo($fileName);

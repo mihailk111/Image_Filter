@@ -1,5 +1,6 @@
 <?php
-
+require "./vendor/autoload.php";
+require_once "./dir_name.php";
 require_once "rgbAt.php";
 require_once "./countAverage.php";
 require_once "./createBlurredFile.php";
@@ -10,14 +11,15 @@ require_once "./fourColorsFilter.php";
 require_once "./saveImage.php";
 
 
-function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurScale, string  $type = "fourColor",  string $outDir = "./", colorPalette $palette)
+function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurScale, string  $type = "fourColor",  string $outDir, colorPalette $palette)
 {
     $pathInfo = pathinfo($filePath);
     $typeOfFile = $pathInfo['extension'];
     $fileName = $pathInfo['filename'];
 
+    $outDir = dir_name($outDir);
     
-    $outFile = $outDir . "{$fileName}_blacked-" . $blurScale . "-" . $areaFindingBlurScale . ".{$typeOfFile}";
+    $outFile = $outDir ."/". "{$fileName}_blacked-" . $blurScale . "-" . $areaFindingBlurScale . ".{$typeOfFile}";
 
     if ($type === "fourColor") {
         $hardBlurredFileName = createBlurredFile($filePath, $areaFindingBlurScale, time() . "{$fileName}_blurred.{$typeOfFile}");
