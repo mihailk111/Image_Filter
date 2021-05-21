@@ -1,7 +1,9 @@
 <?php
-
+require_once "./vendor/autoload.php";
 require_once "./blackWhiteImage.php";
 require_once "./colorPalette.php";
+
+use Symfony\Component\Finder\Finder;
 
 $black = new Color(0,0,0);
 $grey = new Color(85,85,85);
@@ -15,22 +17,18 @@ $twitchColorPalette = new twoColorsPalette($darkPurple, $white);
 $i = 2;
 $j = 0;
 
+$finder = new Finder();
 
-// $lastImageProcessed = file_get_contents("./lastImageProcessed.txt");
+foreach ($finder->in("images")->files()->name("*.jpg") as $file )
+{
+    echo $file->getRealPath() . "\n";
+    blackWhiteImage("images/".$file, $i, $j, "twoColor", outDir:"img_out", palette: $twitchColorPalette);
 
-$dir = scandir("./images");
-$dir = array_filter($dir, function ($elem){
-    return str_ends_with($elem, ".jpg"); 
-});
-
-// $dir = array_filter($dir, function($elem){
-//     preg_match("/\d+/", $elem, $match);
-//     $numberInElem = $match[0]; 
-// });
-// preg_match("/\d+/","out124.jpg", $match)
-
-foreach ($dir as $file) {
-    blackWhiteImage("./images/".$file, $i, $j, "twoColor", outDir:"./img_out/", palette: $twitchColorPalette);
 }
 
+// foreach ($dir as $file) {
+// }
+
 // rgb(174, 31, 207);
+
+
