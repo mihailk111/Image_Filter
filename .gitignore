@@ -6,3 +6,5 @@ trash
 *.png
 *.jpg
 vendor
+/nbproject/private/
+nbproject

@@ -1,4 +1,5 @@
 <?php
+
 require_once "./vendor/autoload.php";
 require_once "./blackWhiteImage.php";
 require_once "./colorPalette.php";
@@ -22,13 +23,9 @@ $finder = new Finder();
 foreach ($finder->in("images")->files()->name("*.jpg") as $file )
 {
     echo $file->getRealPath() . "\n";
-    blackWhiteImage("images/".$file, $i, $j, "twoColor", outDir:"img_out", palette: $twitchColorPalette);
-
+    blackWhiteImage("images/".$file->getRelativePathName(), $i, $j, "twoColor", outDir:"img_out", palette: $twitchColorPalette);
+    
 }
 
-// foreach ($dir as $file) {
-// }
-
-// rgb(174, 31, 207);
 
 
