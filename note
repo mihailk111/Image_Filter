@@ -1,5 +1,6 @@
 TODO refactor !
 
+!! optimize pexels by using ranges;
 
 3. try to speed some shit with imagecolorstotal()
 4. coping can speed up process imagecopy() || call to imagecreatefrom string again

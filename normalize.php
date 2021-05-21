@@ -1,9 +1,11 @@
 <?php
 
 
+/**
+ *  Normalizes path
+ */
 
-
-function dir_name(string $dirName)
+function normalize(string $dirName)
 {
     if ($dirName === "./" || $dirName === ".") return ".";
 
@@ -18,4 +20,3 @@ function dir_name(string $dirName)
 
     return implode("", $dirNameArray);
 }
-
