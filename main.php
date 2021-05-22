@@ -20,11 +20,11 @@ $j = 0;
 
 $finder = new Finder();
 
-foreach ($finder->in("images")->files()->name("*.jpg") as $file )
-{
-    echo $file->getRealPath() . "\n";
-    blackWhiteImage("images/".$file->getRelativePathName(), $i, $j, "twoColor", outDir:"img_out", palette: $twitchColorPalette);
-}
+// foreach ($finder->in("images")->files()->name("*.jpg") as $file )
+// {
+    // echo $file->getRealPath() . "\n";
+    // blackWhiteImage("images/".$file->getRelativePathName(), $i, $j, "twoColor", outDir:"img_out", palette: $twitchColorPalette);
+// }
 
-
+blackWhiteImage("./images/out5221.jpg", 2, 0, "twoColor", "./", $twitchColorPalette);
 

@@ -69,4 +69,8 @@ class mkImage
         $colorIndex = imagecolorallocate($this->image, $red, $green, $blue);
         return $colorIndex;
     }
+    public function setPixel(int $x, int $y, int $colorIndex)
+    {
+        imagesetpixel($this->image, $x, $y, $colorIndex); 
+    }
 }
