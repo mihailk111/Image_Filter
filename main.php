@@ -24,7 +24,6 @@ foreach ($finder->in("images")->files()->name("*.jpg") as $file )
 {
     echo $file->getRealPath() . "\n";
     blackWhiteImage("images/".$file->getRelativePathName(), $i, $j, "twoColor", outDir:"img_out", palette: $twitchColorPalette);
-    
 }
 
 

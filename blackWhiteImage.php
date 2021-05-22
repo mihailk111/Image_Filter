@@ -9,6 +9,7 @@ require_once "./findDarkAndLightAreas.php";
 require_once "./twoColorsFilter.php";
 require_once "./fourColorsFilter.php";
 require_once "./saveImage.php";
+require_once "normalName.php";
 
 
 function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurScale, string  $type = "fourColor",  string $outDir, colorPalette $palette)
@@ -19,9 +20,12 @@ function blackWhiteImage(string $filePath, int $blurScale, int $areaFindingBlurS
 
     $outDir = normalize($outDir);
 
-    $outFile = $outDir . "/" . "{$fileName}_blacked-" . $blurScale . "-" . $areaFindingBlurScale . ".{$typeOfFile}";
+    $fileNameNormal = normalName($fileName);
+
+    $outFile = $outDir . "/" . "{$fileNameNormal}_blacked-" . $blurScale . "-" . $areaFindingBlurScale . ".{$typeOfFile}";
 
     if ($type === "fourColor") {
+
         $hardBlurredFileName = createBlurredFile($filePath, $areaFindingBlurScale, time() . "{$fileName}_blurred.{$typeOfFile}");
 
         $hardBlurredImageResource = imagecreatefromstring(file_get_contents($hardBlurredFileName));

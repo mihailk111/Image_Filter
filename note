@@ -10,6 +10,12 @@ TODO refactor !
 1 take last image from file
 
 
+==========================================================================================================================
+
+createBlurredFile
+imagecreatefromstring(file_get_contents());
+area count average
+coloralocate
 
 
 

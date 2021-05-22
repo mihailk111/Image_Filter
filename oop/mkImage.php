@@ -63,4 +63,10 @@ class mkImage
 
         return  $allGraysSum / ($this->width * $this->height);
     }
+
+    private function colorAllocate(int $red, int $green, int $blue)
+    {
+        $colorIndex = imagecolorallocate($this->image, $red, $green, $blue);
+        return $colorIndex;
+    }
 }

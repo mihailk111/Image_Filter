@@ -10,5 +10,19 @@ class twoColorFilter extends mkFilter
         $this->palette = $palette;
         
     }
+    public function run()
+    {
+
+        // $blurredFileName = createBlurredFile($filePath, $blurScale, time() . "{$fileName}_blurred.{$typeOfFile}");
+
+        $blurredFileName = $this->createBlurredFile($this->imagePath, $this->blur, time() . "{$fileName}_blurred.{$typeOfFile}");
+
+        $imageResource = imagecreatefromstring(file_get_contents($blurredFileName));
+        twoColorsFilter($imageResource, $palette);
+
+        saveImage($imageResource, $filePath, $outFile);
+
+        `rm $blurredFileName`;
+    }
     
 }
