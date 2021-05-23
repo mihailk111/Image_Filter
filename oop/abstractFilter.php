@@ -8,10 +8,10 @@ abstract class abstractFilter
     protected $pathInfo;
     protected $outDir;
     protected $outFile;
-    protected $imagePath;
-    protected $blur;
+    protected string $imagePath;
+    protected int  $blur;
     protected Image $image;
-    protected $palette;
+    protected colorPalette $palette;
     protected string $fileNameNormal;
 
     public function __construct(string $imagePath,  int $blur, string $outDir, colorPalette $palette)

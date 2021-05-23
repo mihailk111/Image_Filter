@@ -35,33 +35,28 @@ class fourColorFilter extends abstractFilter
 
         exec("rm $blurredFileName");
 
-        $black = $this->palette->black;
-        $grey = $this->palette->grey;
-        $lightGrey = $this->palette->lightGrey;
-        $white = $this->palette->white;
 
-        $blackColor = $this->image->colorAllocate($black->red, $black->green, $black->blue);
+        $palette = $this->palette->get();
+        $blackColor = $this->image->colorAllocate(...$palette[0]->get());
 
-        $greyColor = $this->image->colorAllocate($grey->red, $grey->green, $grey->blue);
+        $greyColor = $this->image->colorAllocate(...$palette[1]->get());
 
-        $lightGreyColor = $this->image->colorAllocate($lightGrey->red, $lightGrey->green, $lightGrey->blue);
+        $lightGreyColor = $this->image->colorAllocate(...$palette[2]->get());
 
-        $whiteColor = $this->image->colorAllocate($white->red, $white->green, $white->blue);
+        $whiteColor = $this->image->colorAllocate(...$palette[3]->get());
 
-//        $width =  $this->image->width;
-//        $height = $this->image->width;
 
         $lightAverage = $this->countAreaAverage('light', $areas);
         $darkAverage = $this->countAreaAverage('dark', $areas);
 
 
-        foreach ($areas as $key => &$area) {
+        foreach ($areas as $type => &$area) {
             foreach ($area as &$pixel) {
                 $x = &$pixel[0];
                 $y = &$pixel[1];
                 $grey = $this->image->greyAt($x, $y);
-                if ($key === "light") {
-                    $newColor = ($grey > $lightAverage) ? $whiteColor : $lightGreyColor; //$lightGreyColor; //$blackColor;
+                if ($type === "light") {
+                    $newColor = ($grey > $lightAverage) ? $whiteColor : $lightGreyColor; 
 
                 } else {
                     $newColor = ($grey > $darkAverage) ? $greyColor : $blackColor;

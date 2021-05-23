@@ -22,19 +22,15 @@ class twoColorFilter extends abstractFilter
 
         $image = $this->image;
 
-
         $greyAverage = $image->greyAverage();
 
-        $palette = $this->palette;
-        //TODO DO IT MORE CUTE WAY
-        $black = $image->colorAllocate($palette->black->red, $palette->black->green, $palette->black->blue);
-        $white = $image->colorAllocate($palette->white->red, $palette->white->green, $palette->white->blue);
+        $palette = $this->palette->get();
+        $black = $image->colorAllocate(...$palette[0]->get());
+        $white = $image->colorAllocate(...$palette[1]->get());
 
-        $width =  $image->width;
-        $height = $image->height;
 
-        for ($x = 0; $x < $width; $x++) {
-            for ($y = 0; $y < $height; $y++) {
+        for ($x = 0; $x < $image->width; $x++) {
+            for ($y = 0; $y < $image->height; $y++) {
 
                 $color = $image->greyAt($x, $y);
 

@@ -9,3 +9,4 @@ vendor
 /nbproject/private/
 nbproject
 .idea
+.vscode
