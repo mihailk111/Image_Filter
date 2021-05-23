@@ -1,50 +1,84 @@
 <?php
+require "abstractFilter.php";
 
-function fourColorsFilter($fileName, $blurScale, $areas, fourColorsPalette $palette): GdImage
+class fourColorsFilter extends abstractFilter
 {
-    /**
-     *  main file
-     */
-    $blurredFileName = createBlurredFile($fileName, $blurScale);
-    $image = imagecreatefromstring(file_get_contents($blurredFileName));
 
+    private int $areaFindingBlur;
 
-    `rm $blurredFileName`;
+    public function __construct(string $imagePath, int $blur, int $areaFindingBlur, string $outDir, fourColorsPalette $palette)
+    {
+        parent::__construct($imagePath, $blur, $outDir, $palette);
 
-    $black =  $palette->black;
-    $grey = $palette->grey;
-    $lightGrey = $palette->lightGrey;
-    $white = $palette->white;
+        $this->areaFindingBlur = $areaFindingBlur;
+        $this->outFile = $this->outDir . "/" . "{$this->fileNameNormal}_blacked-" . $this->blur . "-" . $this->areaFindingBlur . "." . $this->pathInfo['extension'];
 
-    $blackColor = imagecolorallocate($image, $black->red, $black->green, $black->blue);
-    $greyColor = imagecolorallocate($image, $grey->red, $grey->green, $grey->blue);
-    $lightGreyColor = imagecolorallocate($image, $lightGrey->red, $lightGrey->green, $lightGrey->blue);
-    $whiteColor = imagecolorallocate($image, $image, $black->red, $black->green, $black->blue);
-
-    $width =  imagesx($image);
-    $height = imagesy($image);
-
-    $lightAverage = countAverage('light', $areas, $image);
-    $darkAverage = countAverage('dark', $areas, $image);
-
-    $lightPixels = &$areas['light'];
-    $darkPixels = &$areas['dark'];
-
-    foreach ($lightPixels as $key => &$pixel) {
-
-        $x = $pixel[0];
-        $y = $pixel[1];
-        $grey = greyAt($image, $x, $y);
-        $newColor = ($grey > $lightAverage) ? $whiteColor : $lightGreyColor; //$lightGreyColor; //$blackColor;
-        imagesetpixel($image, $x, $y, $newColor);
     }
 
-    foreach ($darkPixels as $key => &$pixel) {
-        $x = $pixel[0];
-        $y = $pixel[1];
-        $grey = greyAt($image, $x, $y);
-        $newColor = ($grey > $darkAverage) ? $greyColor : $blackColor;
-        imagesetpixel($image, $x, $y, $newColor);
+
+    public function run()
+    {
+
+        $fileName = $this->pathInfo['filename'];
+        $typeOfFile = $this->pathInfo['extension'];
+
+        $hardBlurredFileName = $this->createBlurredFile($this->imagePath, $this->areaFindingBlur, time() . $fileName . "_blurred." . $typeOfFile);
+
+        $hardBlurredImage = $this->openImage($hardBlurredFileName);
+
+        $areas = $hardBlurredImage->findDarkAndLightAreas();
+
+        $hardBlurredImage->destroy();
+
+        $blurredFileName = $this->createBlurredFile($this->imagePath, $this->blur);
+        $this->image = $this->openImage($blurredFileName);
+
+        exec("rm $blurredFileName");
+
+        $palette = $this->palette->get();
+        $blackColor = $this->image->colorAllocate(...$palette[0]->get());
+
+        $greyColor = $this->image->colorAllocate(...$palette[1]->get());
+
+        $lightGreyColor = $this->image->colorAllocate(...$palette[2]->get());
+
+        $whiteColor = $this->image->colorAllocate(...$palette[3]->get());
+
+
+        $lightAverage = $this->countAreaAverage('light', $areas);
+        $darkAverage = $this->countAreaAverage('dark', $areas);
+
+
+        foreach ($areas as $type => &$area) {
+            foreach ($area as &$pixel) {
+                $x = &$pixel[0];
+                $y = &$pixel[1];
+                $grey = $this->image->greyAt($x, $y);
+                if ($type === "light") {
+                    $newColor = ($grey > $lightAverage) ? $whiteColor : $lightGreyColor;
+
+                } else {
+                    $newColor = ($grey > $darkAverage) ? $greyColor : $blackColor;
+                }
+                $this->image->setPixel($x, $y, $newColor);
+
+            }
+        }
+
+        $this->saveImage($this->imagePath, $this->outFile);
+
+        exec("rm $hardBlurredFileName");
     }
-    return $image;
+
+    protected function countAreaAverage(string $type, array &$areas): int|float
+    {
+        $pixelsSum = 0;
+        $count = 0;
+        foreach ($areas[$type] as &$pixel) {
+            $pixelsSum += $this->image->greyAt($pixel[0], $pixel[1]);
+            $count++;
+        }
+
+        return $pixelsSum / $count;
+    }
 }

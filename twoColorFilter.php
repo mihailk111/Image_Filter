@@ -13,7 +13,6 @@ class twoColorFilter extends abstractFilter
     public function run()
     {
 
-        // $blurredFileName = createBlurredFile($filePath, $blurScale, time() . "{$fileName}_blurred.{$typeOfFile}");
         $blurredFileName = $this->pathInfo['filename'] . "_blurred." . $this->pathInfo['extension'];
 
         $this->createBlurredFile($this->imagePath, $this->blur, $blurredFileName);
