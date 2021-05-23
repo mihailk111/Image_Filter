@@ -1,5 +1,7 @@
 {
     "require": {
-        "symfony/finder": "^5.2"
+        "symfony/finder": "^5.2",
+      "ext-gd": "*",
+      "ext-exif": "*"
     }
 }

@@ -3,9 +3,9 @@
 class fourColorFilter extends abstractFilter {
 
     public function __construct(string $imagePath, int $blur, int $areaFindingBlur, string $outDir, fourColorsPalette $palette) {
-        parent::__construct($imagePath, $blur, $outDir);
-        $this->palette = $palette;
+        parent::__construct($imagePath, $blur, $outDir, $palette);
         $this->areaFindingBlur = $areaFindingBlur;
+
     }
 
     public function run($param) {

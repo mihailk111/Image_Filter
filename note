@@ -1,21 +1,10 @@
-TODO refactor !
 
-!! optimize pexels by using ranges;
-
-3. try to speed some shit with imagecolorstotal()
-4. coping can speed up process imagecopy() || call to imagecreatefrom string again
+//TODO !! optimize pixels by using ranges;
+//TODO !! try multithreading using multiple php processes
 
 
 
-1 take last image from file
 
-
-==========================================================================================================================
-
-createBlurredFile
-imagecreatefromstring(file_get_contents());
-area count average
-coloralocate
 
 
 

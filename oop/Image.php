@@ -1,8 +1,8 @@
 <?php
 
-class mkImage
+class Image
 {
-    private GdImage $image;
+    public GdImage $image;
 
     public function __construct(GdImage $image)
     {
@@ -11,20 +11,20 @@ class mkImage
         $this->height = imagesy($image);
     }
 
-    private function greyAt(int $x, int $y) :int
+    public function greyAt(int $x, int $y) :int
     {
         $rgb = $this->rgbAt($x, $y);
         return intval((0.3 * $rgb['red'] + 0.59 * $rgb['green'] + 0.11 * $rgb['blue']));
     }
 
-    private function rgbAt(int $x, int $y): array
+    protected function rgbAt(int $x, int $y): array
     {
         $pixelColorIndex = imagecolorat($this->image, $x, $y);
         return imagecolorsforindex($this->image, $pixelColorIndex);
     }
 
 
-    private function findDarkAndLightAreas(): array
+    protected function findDarkAndLightAreas(): array
     {
 
         $greyAverage = $this->greyAverage();
@@ -49,7 +49,7 @@ class mkImage
         return $area;
     }
 
-    private function greyAverage(): float|int
+    public function greyAverage(): float|int
     {
 
         $allGraysSum = 0;
@@ -64,11 +64,12 @@ class mkImage
         return  $allGraysSum / ($this->width * $this->height);
     }
 
-    private function colorAllocate(int $red, int $green, int $blue)
+    public function colorAllocate(int $red, int $green, int $blue): bool|int
     {
         $colorIndex = imagecolorallocate($this->image, $red, $green, $blue);
         return $colorIndex;
     }
+
     public function setPixel(int $x, int $y, int $colorIndex)
     {
         imagesetpixel($this->image, $x, $y, $colorIndex); 

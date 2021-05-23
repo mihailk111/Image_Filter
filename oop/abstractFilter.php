@@ -2,6 +2,7 @@
 
 require_once "Image.php";
 
+
 abstract class abstractFilter
 {
     protected $pathInfo;
@@ -9,23 +10,21 @@ abstract class abstractFilter
     protected $outFile;
     protected $imagePath;
     protected $blur;
+    protected Image $image;
+    protected $palette;
+    protected string $fileNameNormal;
 
-    public function __construct(string $imagePath,  int $blur, string $outDir)
+    public function __construct(string $imagePath,  int $blur, string $outDir, colorPalette $palette)
     {
-        $this->outDir = $outDir;
+        $this->outDir = $this->normalizeDir($outDir);
         $this->blur = $blur;
         $this->imagePath = $imagePath;
-
         $this->pathInfo = pathinfo($this->imagePath);
+        $this->palette = $palette;
 
-        // $fileName = $pathInfo['filename'];
-        // $typeOfFile = $pathInfo['extension'];
+        $this->fileNameNormal = $this->normalizeName($this->pathInfo['filename']);
 
-        $this->outDir = $this->normalizeDir($this->outDir);
-
-        $fileNameNormal = $this->normalizeName($this->pathInfo['filename']);
-
-        $this->outFile = $this->outDir . "/" . "{$fileNameNormal}_blacked-" . $this->blur . "-" . $this->areaFindingBlurScale ?? "null" . "." . $this->pathInfo['extension'];
+//        $this->outFile = $this->outDir . "/" . "{$fileNameNormal}_blacked-" . $this->blur . "-" . $this->areaFindingBlurScale ?? "null" . "." . $this->pathInfo['extension'];
     }
 
 
@@ -40,7 +39,7 @@ abstract class abstractFilter
     protected function openImage(string $fileName)
     {
         $image = imagecreatefromstring(file_get_contents($fileName));
-        $this->image = new mkImage($image);
+        $this->image = new Image($image);
     }
 
     protected function saveImage(string $filePath, string $outFile)
@@ -49,13 +48,13 @@ abstract class abstractFilter
         $imageType = image_type_to_extension(exif_imagetype($filePath), false);
 
         match ($imageType) {
-            'jpeg' => imagejpeg($this->image, $outFile,  100),
-            'png' => imagepng($this->image, $outFile, 0),
-            'webp' => imagewebp($this->image, $outFile, 100),
+            'jpeg' => imagejpeg($this->image->image, $outFile,  100),
+            'png' => imagepng($this->image->image, $outFile, 0),
+            'webp' => imagewebp($this->image->image, $outFile, 100),
             default => throw new Exception("We support only JPEG WEBP and PNG")
         };
 
-        imagedestroy($this->image);
+        imagedestroy($this->image->image);
     }
 
     public function normalizeDir(string $dirName)

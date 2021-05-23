@@ -1,13 +1,14 @@
 <?php
 
-require_once "./mkFilter.php";
+require_once "./abstractFilter.php";
 
 class twoColorFilter extends abstractFilter
 {
     public function __construct(string $imagePath, int $blur, string $outDir, twoColorsPalette $palette)
     {
-        parent::__construct($imagePath, $blur,  $outDir);
-        $this->palette = $palette;
+        parent::__construct($imagePath, $blur,  $outDir, $palette);
+        $this->outFile = $this->outDir . "/" . "{$this->fileNameNormal}_blacked-" . $this->blur . "." . $this->pathInfo['extension'];
+
     }
     public function run()
     {
@@ -21,15 +22,11 @@ class twoColorFilter extends abstractFilter
 
         $image = $this->image;
 
-        // $imageResource = imagecreatefromstring(file_get_contents($blurredFileName));
-
-
-        // twoColorsFilter($imageResource, $palette);
-
-        // $greyAverage = imageGreyAverage($image);
 
         $greyAverage = $image->greyAverage();
 
+        $palette = $this->palette;
+        //TODO DO IT MORE CUTE WAY
         $black = $image->colorAllocate($palette->black->red, $palette->black->green, $palette->black->blue);
         $white = $image->colorAllocate($palette->white->red, $palette->white->green, $palette->white->blue);
 
@@ -45,39 +42,13 @@ class twoColorFilter extends abstractFilter
                     $image->setPixel($x, $y, $white);
                 } else {
                     $image->setPixel($x, $y, $black);
-                    // imagesetpixel($image, $x, $y, $black);
                 }
             }
         }
-        $this->saveImage($this->imagePath, $outFile);
 
-        `rm $blurredFileName`;
+        $this->saveImage($this->imagePath, $this->outFile);
+
+        exec("rm $blurredFileName");
     }
-
-
-    // function twoColorsFilter(GdImage $image, twoColorsPalette $palette)
-    // {
-    //     $greyAverage = imageGreyAverage($image);
-
-    //     $black = imagecolorallocate($image, $palette->black->red, $palette->black->green, $palette->black->blue);
-    //     $white = imagecolorallocate($image, $palette->white->red, $palette->white->green, $palette->white->blue);
-
-    //     $width =  imagesx($image);
-    //     $height = imagesy($image);
-
-    //     for ($x = 0; $x < $width; $x++) {
-    //         for ($y = 0; $y < $height; $y++) {
-
-    //             $color = greyAt($image, $x, $y);
-
-    //             if ($color > $greyAverage) {
-    //                 imagesetpixel($image, $x, $y, $white);
-    //             } else {
-    //                 imagesetpixel($image, $x, $y, $black);
-    //             }
-    //         }
-    //     }
-    // }
-
 
 }
