@@ -9,6 +9,7 @@ function countAverage(string $type, array &$area, GdImage $image)
     $count = 0;
     foreach ($area[$type] as &$pixel) {
         $pixelsSum += greyAt($image, $pixel[0], $pixel[1]);
+
         $count ++;
     }
 

@@ -24,7 +24,7 @@ class Image
     }
 
 
-    protected function findDarkAndLightAreas(): array
+    public function findDarkAndLightAreas(): array
     {
 
         $greyAverage = $this->greyAverage();
@@ -70,6 +70,13 @@ class Image
         return $colorIndex;
     }
 
+    /**
+     *  unset($this->image); image is GdImage
+     */
+    public function destroy()
+    {
+        unset($this->image);
+    }
     public function setPixel(int $x, int $y, int $colorIndex)
     {
         imagesetpixel($this->image, $x, $y, $colorIndex); 

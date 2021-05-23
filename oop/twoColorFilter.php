@@ -18,7 +18,7 @@ class twoColorFilter extends abstractFilter
 
         $this->createBlurredFile($this->imagePath, $this->blur, $blurredFileName);
 
-        $this->openImage($blurredFileName);
+        $this->image = $this->openImage($blurredFileName);
 
         $image = $this->image;
 

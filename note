@@ -1,6 +1,8 @@
 
 //TODO !! optimize pixels by using ranges;
 //TODO !! try multithreading using multiple php processes
+//TODO add twitchColorFilter as extension of twoColorFiler
+
 
 
 

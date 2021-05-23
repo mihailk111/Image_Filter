@@ -36,10 +36,10 @@ abstract class abstractFilter
         return $blurredFileName;
     }
 
-    protected function openImage(string $fileName)
+    protected function openImage(string $fileName) : Image
     {
         $image = imagecreatefromstring(file_get_contents($fileName));
-        $this->image = new Image($image);
+        return new Image($image);
     }
 
     protected function saveImage(string $filePath, string $outFile)
