@@ -1,5 +1,7 @@
 <?php
 
+use JetBrains\PhpStorm\ArrayShape;
+
 class Image
 {
     public GdImage $image;
@@ -24,6 +26,7 @@ class Image
     }
 
 
+    #[ArrayShape(['dark' => "array", 'light' => "array"])]
     public function findDarkAndLightAreas(): array
     {
 
@@ -66,8 +69,7 @@ class Image
 
     public function colorAllocate(int $red, int $green, int $blue): bool|int
     {
-        $colorIndex = imagecolorallocate($this->image, $red, $green, $blue);
-        return $colorIndex;
+        return imagecolorallocate($this->image, $red, $green, $blue);
     }
 
     /**
