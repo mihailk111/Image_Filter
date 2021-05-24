@@ -1,12 +1,10 @@
-TODO refactor !
+
+//TODO !! optimize pixels by using ranges;
+//TODO !! try multithreading using multiple php processes
+//TODO add twitchColorFilter as extension of twoColorFiler
 
 
-3. try to speed some shit with imagecolorstotal()
-4. coping can speed up process imagecopy() || call to imagecreatefrom string again
 
-
-
-1 take last image from file
 
 
 

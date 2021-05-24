@@ -6,3 +6,7 @@ trash
 *.png
 *.jpg
 vendor
+/nbproject/private/
+nbproject
+.idea
+.vscode
