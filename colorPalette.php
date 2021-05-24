@@ -1,7 +1,8 @@
 <?php
+spl_autoload_register(function ($class) {
+        require_once $class. ".php";
 
-require_once "Color.php";
-require_once "getValuesInArray.php";
+});
 
 interface colorPalette extends getValuesInArray
 {
