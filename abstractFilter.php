@@ -23,15 +23,13 @@ abstract class abstractFilter
         $this->palette = $palette;
 
         $this->fileNameNormal = $this->normalizeName($this->pathInfo['filename']);
-
-//        $this->outFile = $this->outDir . "/" . "{$fileNameNormal}_blacked-" . $this->blur . "-" . $this->areaFindingBlurScale ?? "null" . "." . $this->pathInfo['extension'];
     }
 
 
     protected function createBlurredFile(string $fileName, int $blurScale, string $outFile = null): string
     {
         $pathInfo = pathinfo($fileName);
-        $blurredFileName = isset($outFile) ? $outFile : $pathInfo['filename'] . "_blurred." . $pathInfo['extension'];
+        $blurredFileName = $outFile ?? $pathInfo['filename'] . "_blurred." . $pathInfo['extension'];
         `convert $fileName -blur 0x$blurScale $blurredFileName`;
         return $blurredFileName;
     }
@@ -51,7 +49,7 @@ abstract class abstractFilter
             'jpeg' => imagejpeg($this->image->image, $outFile,  100),
             'png' => imagepng($this->image->image, $outFile, 0),
             'webp' => imagewebp($this->image->image, $outFile, 100),
-            default => throw new Exception("We support only JPEG WEBP and PNG")
+            default => throw new Error("We support only JPEG WEBP and PNG")
         };
 
         imagedestroy($this->image->image);

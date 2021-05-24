@@ -1,6 +1,25 @@
 <?php
 
-class myIterator implements Iterator {
+class myIterator{
+    private $position = 0;
+    private $array = array(
+        "firstelement",
+        "secondelement",
+        "lastelement",
+    );
+
+    public function __construct() {
+        $this->position = 0;
+    }
+
+    public function rewind() {
+        var_dump(__METHOD__);
+        $this->position = 0;
+    }
+
+}
+
+class myIterator2{
     private $position = 0;
     private $array = array(
         "firstelement",
@@ -37,21 +56,9 @@ class myIterator implements Iterator {
         return isset($this->array[$this->position]);
     }
 }
-//
-//$it = new myIterator();
-//
-//foreach($it as $key => $value) {
-//    var_dump($key, $value);
-//    echo "\n";
-//}
-//
-//
 
-$o = new myIterator();
-
-doShit(...$o);
-
-function doShit()
-{
-    var_dump(func_get_args());
+$objects = [];
+for ($i = 0; $i < 1000000; $i++) {
+    $objects[]= new myIterator2();
 }
+sleep(99999);
