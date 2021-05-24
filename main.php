@@ -5,7 +5,7 @@ spl_autoload_register(function (string $className) {
 });
 
 
-$black = S('Color',0,0,0);
+$black = new Color(0,0,0);
 
 $grey = new Color(85,85,85);
 $lightGrey = new Color(170, 170, 170);
@@ -16,13 +16,13 @@ $lightPurple = new Color(168, 109, 162);
 $twitchColorPalette = new twoColorsPalette($darkPurple, $white);
 $twitchFourColor = new fourColorsPalette($black, $darkPurple, $lightPurple, $white);
 
-$filter = new fourColorsFilter("../images/out1.jpg", 2,2,".", $twitchFourColor);
-$filter->run();
+$filter = new fourColorsFilter( 2,4,".", $twitchFourColor);
+$filter->run("./images/out2.jpg");
+$filter->run("./images/out3.jpg");
+$filter->run("./images/out4.jpg");
 
-$anotherFilter = new twoColorFilter('../images/out1.jpg', 2, ".", $twitchColorPalette);
-$anotherFilter->run();
+//$anotherFilter = new twoColorFilter(2, ".", $twitchColorPalette);
+//$anotherFilter->run("./images/out2.jpg");
+//$anotherFilter->run("./images/out3.jpg");
+//$anotherFilter->run("./images/out4.jpg");
 
-function S(string $class, ...$args)
-{
-    return new $class(...$args);
-}

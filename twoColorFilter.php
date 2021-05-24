@@ -4,14 +4,24 @@ require_once "./abstractFilter.php";
 
 class twoColorFilter extends abstractFilter
 {
-    public function __construct(string $imagePath, int $blur, string $outDir, twoColorsPalette $palette)
+    public function __construct(int $blur, string $outDir, twoColorsPalette $palette)
     {
-        parent::__construct($imagePath, $blur,  $outDir, $palette);
+        parent::__construct($blur, $outDir, $palette);
+
+    }
+
+    protected function initializeNames(string $imagePath)
+    {
+        $this->imagePath = $imagePath;
+        $this->pathInfo = pathinfo($this->imagePath);
+        $this->fileNameNormal = $this->normalizeName($this->pathInfo['filename']);
         $this->outFile = $this->outDir . "/" . "{$this->fileNameNormal}_blacked-" . $this->blur . "." . $this->pathInfo['extension'];
 
     }
-    public function run()
+
+    public function run(string $imagePath)
     {
+        $this->initializeNames($imagePath);
 
         $blurredFileName = $this->pathInfo['filename'] . "_blurred." . $this->pathInfo['extension'];
 

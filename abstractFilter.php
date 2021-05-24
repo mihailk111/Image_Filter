@@ -14,17 +14,19 @@ abstract class abstractFilter
     protected colorPalette $palette;
     protected string $fileNameNormal;
 
-    public function __construct(string $imagePath,  int $blur, string $outDir, colorPalette $palette)
+    public function __construct(int $blur, string $outDir, colorPalette $palette)
     {
         $this->outDir = $this->normalizeDir($outDir);
         $this->blur = $blur;
-        $this->imagePath = $imagePath;
-        $this->pathInfo = pathinfo($this->imagePath);
+//        $this->imagePath = $imagePath;
+//        $this->pathInfo = pathinfo($this->imagePath);
         $this->palette = $palette;
 
-        $this->fileNameNormal = $this->normalizeName($this->pathInfo['filename']);
+//        $this->fileNameNormal = $this->normalizeName($this->pathInfo['filename']);
     }
 
+    abstract public function run(string $imagePath);
+    abstract protected function initializeNames(string $imagePath);
 
     protected function createBlurredFile(string $fileName, int $blurScale, string $outFile = null): string
     {

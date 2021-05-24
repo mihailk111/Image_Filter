@@ -6,18 +6,26 @@ class fourColorsFilter extends abstractFilter
 
     private int $areaFindingBlur;
 
-    public function __construct(string $imagePath, int $blur, int $areaFindingBlur, string $outDir, fourColorsPalette $palette)
+    public function __construct(int $blur, int $areaFindingBlur, string $outDir, fourColorsPalette $palette)
     {
-        parent::__construct($imagePath, $blur, $outDir, $palette);
-
+        parent::__construct($blur, $outDir, $palette);
         $this->areaFindingBlur = $areaFindingBlur;
+
+    }
+
+    protected function initializeNames(string $imagePath)
+    {
+        $this->imagePath = $imagePath;
+        $this->pathInfo = pathinfo($this->imagePath);
+        $this->fileNameNormal = $this->normalizeName($this->pathInfo['filename']);
         $this->outFile = $this->outDir . "/" . "{$this->fileNameNormal}_blacked-" . $this->blur . "-" . $this->areaFindingBlur . "." . $this->pathInfo['extension'];
 
     }
 
 
-    public function run()
+    public function run(string $imagePath)
     {
+        $this->initializeNames($imagePath);
 
         $fileName = $this->pathInfo['filename'];
         $typeOfFile = $this->pathInfo['extension'];
