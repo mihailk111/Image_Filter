@@ -42,14 +42,65 @@ class Image
 
                 $newColor = $newGreyRgbElement > $greyAverage ? 'white' : 'black';
                 if ($newColor === 'white') {
-                    $area['light'][] = [$x, $y];
+                    $this->addPixel($area['light'], [$x, $y]);
                 } else {
-                    $area['dark'][] = [$x, $y];
+                    $this->addPixel($area['dark'], [$x, $y]);
                 }
             }
         }
-
+        $this->optimizePixels($area);
         return $area;
+    }
+
+    private function optimizePixels(array &$areas)
+    {
+        $toRanges = function (array $y_s) {
+            $resultArray = [];
+            $currentArray = [];
+
+            foreach ($y_s as $y) {
+                if (empty($currentArray[0])) {
+                   $currentArray []= $y;
+                }
+                else
+                {
+                    $last = $currentArray[array_key_last($currentArray)];
+                    if ($last - $y === 1) {
+                        $currentArray []= $y;
+                    }
+                    else
+                    {
+                        $resultArray []= [ $currentArray[array_key_last($currentArray)], $currentArray[0] ];
+                        $currentArray = [];
+                    }
+                }
+            }
+
+            if (isset($currentArray[0])) {
+                $resultArray []= [ $currentArray[array_key_last($currentArray)], $currentArray[0] ];
+            }
+            return $resultArray;
+        };
+
+        foreach ($areas as &$area) {
+            foreach ($area as &$x_array) {
+                rsort($x_array);
+                $x_array = $toRanges($x_array);
+            }
+        }
+    }
+
+    private function addPixel(array &$area, array $pixel)
+    {
+        $x = $pixel[0];
+        $y = $pixel[1];
+        if (isset($area[$x])) {
+            $area[$x] [] = $y;
+        } else {
+            $area[$x] = [];
+            $area[$x] [] = $y;
+        }
+
     }
 
     public function greyAverage(): float|int

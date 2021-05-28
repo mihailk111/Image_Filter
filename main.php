@@ -16,10 +16,10 @@ $lightPurple = new Color(168, 109, 162);
 $twitchColorPalette = new twoColorsPalette($darkPurple, $white);
 $twitchFourColor = new fourColorsPalette($black, $darkPurple, $lightPurple, $white);
 
-$filter = new fourColorsFilter( 2,4,".", $twitchFourColor);
-$filter->run("./images/out2.jpg");
-$filter->run("./images/out3.jpg");
-$filter->run("./images/out4.jpg");
+$filter = new fourColorsFilter( 2,2,".", $twitchFourColor);
+$filter->run("./img/mona_liza.jpg");
+//$filter->run("./images/out3.jpg");
+//$filter->run("./images/out4.jpg");
 
 //$anotherFilter = new twoColorFilter(2, ".", $twitchColorPalette);
 //$anotherFilter->run("./images/out2.jpg");
