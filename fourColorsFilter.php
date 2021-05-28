@@ -15,9 +15,10 @@ class fourColorsFilter extends abstractFilter
 
     protected function initializeNames(string $imagePath)
     {
+
         $this->imagePath = $imagePath;
         $this->pathInfo = pathinfo($this->imagePath);
-        $this->fileNameNormal = $this->normalizeName($this->pathInfo['filename']);
+        $this->fileNameNormal = $this->pathInfo['filename']; //$this->normalizeName($this->pathInfo['filename']);
         $this->outFile = $this->outDir . "/" . "{$this->fileNameNormal}_blacked-" . $this->blur . "-" . $this->areaFindingBlur . "." . $this->pathInfo['extension'];
 
     }
@@ -52,26 +53,30 @@ class fourColorsFilter extends abstractFilter
 
         $whiteColor = $this->image->colorAllocate(...$palette[3]->get());
 
-
         $lightAverage = $this->countAreaAverage('light', $areas);
         $darkAverage = $this->countAreaAverage('dark', $areas);
 
 
-        foreach ($areas as $type => &$area) {
-            foreach ($area as &$pixel) {
-                $x = &$pixel[0];
-                $y = &$pixel[1];
-                $grey = $this->image->greyAt($x, $y);
-                if ($type === "light") {
-                    $newColor = ($grey > $lightAverage) ? $whiteColor : $lightGreyColor;
+        foreach ($areas as $areaType => $area) {
+            foreach ($area as $x => $y_array) {
+                foreach ($y_array as $y_range) {
+                    foreach (range($y_range[0], $y_range[1]) as $y) {
 
-                } else {
-                    $newColor = ($grey > $darkAverage) ? $greyColor : $blackColor;
+                        $grey = $this->image->greyAt($x, $y);
+                        if ($areaType === "light") {
+                            $newColor = ($grey > $lightAverage) ? $whiteColor : $lightGreyColor;
+
+                        } else {
+                            $newColor = ($grey > $darkAverage) ? $greyColor : $blackColor;
+                        }
+                        $this->image->setPixel($x, $y, $newColor);
+
+
+                    }
                 }
-                $this->image->setPixel($x, $y, $newColor);
-
             }
         }
+
 
         $this->saveImage($this->imagePath, $this->outFile);
 
@@ -82,11 +87,15 @@ class fourColorsFilter extends abstractFilter
     {
         $pixelsSum = 0;
         $count = 0;
-        foreach ($areas[$type] as &$pixel) {
-            $pixelsSum += $this->image->greyAt($pixel[0], $pixel[1]);
-            $count++;
-        }
 
+        foreach ($areas[$type] as $x => $y_s) {
+            foreach ($y_s as $y_array) {
+                foreach (range($y_array[0], $y_array[1]) as $y) {
+                    $pixelsSum += $this->image->greyAt($x, $y);
+                    $count++;
+                }
+            }
+        }
         return $pixelsSum / $count;
     }
 }
